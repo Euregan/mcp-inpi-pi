@@ -1,0 +1,11 @@
+services:
+  mcp-inpi-pi:
+    build: .
+    ports:
+      - "${PORT:-3000}:3000"
+    environment:
+      INPI_USERNAME: ${INPI_USERNAME:?INPI_USERNAME is required}
+      INPI_PASSWORD: ${INPI_PASSWORD:?INPI_PASSWORD is required}
+      INPI_MAX_REQUESTS_PER_MINUTE: ${INPI_MAX_REQUESTS_PER_MINUTE:-30}
+      INPI_MAX_REQUESTS_PER_HOUR: ${INPI_MAX_REQUESTS_PER_HOUR:-500}
+    restart: unless-stopped
