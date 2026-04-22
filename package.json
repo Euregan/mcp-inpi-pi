@@ -36,7 +36,8 @@
     "url": "https://github.com/guix77/mcp-inpi-pi/issues"
   },
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "provenance": true
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.12.0"
