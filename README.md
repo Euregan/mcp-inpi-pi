@@ -14,9 +14,12 @@ Serveur [MCP](https://modelcontextprotocol.io/) exposant l'[API Propriété indu
 
 ## Installation
 
-```bash
-npx @guix77/mcp-inpi-pi
-```
+### Obtenir un compte API INPI (gratuit)
+
+1. Créez un compte sur [data.inpi.fr](https://data.inpi.fr)
+2. Allez dans "Mon espace client" → "Accès APIs PI"
+3. Sélectionnez le contenu "Marques"
+4. Un email d'activation vous sera envoyé pour créer votre mot de passe API
 
 ### Configuration Claude Desktop
 
@@ -28,19 +31,12 @@ npx @guix77/mcp-inpi-pi
       "args": ["-y", "@guix77/mcp-inpi-pi"],
       "env": {
         "INPI_USERNAME": "votre-email@exemple.fr",
-        "INPI_PASSWORD": "votre-mot-de-passe"
+        "INPI_PASSWORD": "votre-mot-de-passe-API"
       }
     }
   }
 }
 ```
-
-### Obtenir un compte API INPI (gratuit)
-
-1. Créez un compte sur [data.inpi.fr](https://data.inpi.fr)
-2. Allez dans "Mon espace client" → "Accès APIs PI"
-3. Sélectionnez le contenu "Marques"
-4. Un email d'activation vous sera envoyé pour créer votre mot de passe API
 
 ## Transport HTTP (expérimental)
 
