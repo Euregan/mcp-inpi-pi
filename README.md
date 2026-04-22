@@ -1,6 +1,6 @@
 # mcp-inpi-pi
 
-Serveur [MCP](https://modelcontextprotocol.io/) pour la recherche de marques françaises, européennes et internationales via l'API de l'[INPI](https://data.inpi.fr) (Institut National de la Propriété Industrielle).
+Serveur [MCP](https://modelcontextprotocol.io/) exposant l'[API Propriété industrielle de l'INPI](https://www.inpi.fr/ressources/propriete-intellectuelle/acces-aux-api-et-ftp).
 
 > **Ce projet est indépendant et n'est ni affilié, ni approuvé, ni sponsorisé par l'INPI.**
 

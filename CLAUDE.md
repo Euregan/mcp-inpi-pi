@@ -1,6 +1,6 @@
 # mcp-inpi-pi
 
-Serveur MCP qui expose l'API Marques de l'INPI. Recherche de marques françaises (FR), européennes (EU) et internationales (WO), classes de Nice, statut, titulaire.
+Serveur MCP qui expose l'API Propriété industrielle de l'INPI. Recherche de marques françaises (FR), européennes (EU) et internationales (WO), classes de Nice, statut, titulaire.
 
 ## Stack
 

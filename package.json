@@ -1,7 +1,7 @@
 {
   "name": "@guix77/mcp-inpi-pi",
-  "version": "0.1.0",
-  "description": "Serveur MCP pour la recherche de marques françaises via l'API INPI",
+  "version": "0.1.1",
+  "description": "Serveur MCP exposant l'API Propriété industrielle de l'INPI",
   "type": "module",
   "main": "dist/index.js",
   "bin": {
