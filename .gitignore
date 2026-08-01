@@ -4,3 +4,4 @@ dist/
 .env
 cookie.txt
 .DS_Store
+.vercel

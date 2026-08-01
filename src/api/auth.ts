@@ -120,10 +120,7 @@ export async function login(
 
   // Capture les cookies de session posés par le login (access_token, refresh_token)
   const loginCookies: string[] =
-    // @ts-expect-error — getSetCookie() dispo Node 18.14+ / undici
-    typeof response.headers.getSetCookie === "function"
-      ? (response.headers as unknown as { getSetCookie(): string[] }).getSetCookie()
-      : [];
+    typeof response.headers.getSetCookie === "function" ? response.headers.getSetCookie() : [];
 
   return { accessToken, loginCookies };
 }

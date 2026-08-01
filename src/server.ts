@@ -12,14 +12,7 @@ import { handleSearchTool } from "./tools/search.js";
 import { handleDetailsTool } from "./tools/details.js";
 import { formatNiceClasses } from "./resources/nice-classes.js";
 
-export function createServer(client?: INPIClient): McpServer {
-  const server = new McpServer({
-    name: "mcp-inpi-pi",
-    version: "0.1.0",
-  });
-
-  const resolvedClient = client ?? new INPIClient(credentialsFromEnv());
-
+export function registerCapabilities(server: McpServer, resolvedClient: INPIClient): void {
   server.tool(
     "search_trademarks",
     "Recherche de marques dans la base INPI (FR, EU, internationales). Retourne les marques correspondant au terme recherché.",
@@ -62,6 +55,15 @@ export function createServer(client?: INPIClient): McpServer {
       ],
     })
   );
+}
+
+export function createServer(client?: INPIClient): McpServer {
+  const server = new McpServer({
+    name: "mcp-inpi-pi",
+    version: "0.1.0",
+  });
+
+  registerCapabilities(server, client ?? new INPIClient(credentialsFromEnv()));
 
   return server;
 }

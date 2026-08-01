@@ -1,7 +1,7 @@
 import tseslint from "typescript-eslint";
 
 export default tseslint.config(...tseslint.configs.recommended, {
-  files: ["src/**/*.ts"],
+  files: ["src/**/*.ts", "api/**/*.ts"],
   rules: {
     "@typescript-eslint/no-explicit-any": "warn",
   },

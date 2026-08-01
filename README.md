@@ -71,6 +71,26 @@ docker run -p 3000:3000 \
 
 > Le conteneur expose uniquement le transport HTTP. Pour une intégration stdio classique (Claude Desktop), aucun conteneur n'est nécessaire.
 
+### Vercel (expérimental)
+
+Le serveur peut aussi être déployé comme [Vercel Function](https://vercel.com/docs/mcp/deploy-mcp-servers-to-vercel), sans framework (`api/mcp.ts` à la racine, via [`mcp-handler`](https://www.npmjs.com/package/mcp-handler)) :
+
+```bash
+npx vercel deploy
+```
+
+Configurez `INPI_USERNAME` et `INPI_PASSWORD` dans les variables d'environnement du projet Vercel. Endpoint exposé : `https://<votre-projet>.vercel.app/api/mcp`.
+
+```json
+{
+  "mcpServers": {
+    "inpi-pi": {
+      "url": "https://<votre-projet>.vercel.app/api/mcp"
+    }
+  }
+}
+```
+
 ## Variables d'environnement
 
 | Variable | Requis | Description |
