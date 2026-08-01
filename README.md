@@ -79,9 +79,16 @@ Le serveur peut aussi être déployé comme [Vercel Function](https://vercel.com
 npx vercel deploy
 ```
 
-Ce déploiement est **multi-utilisateurs** : il n'y a pas de compte INPI global configuré côté serveur. Chaque utilisateur fournit ses propres identifiants via les en-têtes HTTP `X-INPI-Username` / `X-INPI-Password`, envoyés avec chaque requête. Une requête sans ces en-têtes reçoit une erreur 401.
+Ce déploiement est **multi-utilisateurs** : il n'y a pas de compte INPI global configuré côté serveur. Chaque utilisateur fournit ses propres identifiants INPI, selon le client utilisé :
+
+- **Claude Desktop / Claude Code CLI** : en-têtes HTTP `X-INPI-Username` / `X-INPI-Password`, envoyés avec chaque requête.
+- **claude.ai (web)** : OAuth 2.1 — l'UI web des connecteurs ne supporte que "sans authentification" ou OAuth, pas les en-têtes personnalisés. Ce serveur agit donc aussi comme son propre serveur d'autorisation OAuth (`/authorize`, `/token`, `/register`, métadonnées `.well-known/*`). En ajoutant le connecteur, vous serez redirigé vers une page de connexion hébergée par ce serveur, où vous saisissez votre email et mot de passe API INPI — envoyés uniquement à ce serveur, jamais à Claude ni à un tiers.
+
+Une requête sans identifiants valides (en-têtes ou token OAuth) reçoit une erreur 401.
 
 Endpoint exposé : `https://<votre-projet>.vercel.app/api/mcp`.
+
+En-têtes (Claude Desktop) :
 
 ```json
 {
@@ -97,7 +104,7 @@ Endpoint exposé : `https://<votre-projet>.vercel.app/api/mcp`.
 }
 ```
 
-Avec Claude Code :
+En-têtes (Claude Code) :
 
 ```bash
 claude mcp add --transport http inpi-pi https://<votre-projet>.vercel.app/api/mcp \
@@ -105,9 +112,13 @@ claude mcp add --transport http inpi-pi https://<votre-projet>.vercel.app/api/mc
   --header "X-INPI-Password: votre-mot-de-passe-API"
 ```
 
+OAuth (claude.ai) : ajoutez simplement `https://<votre-projet>.vercel.app/api/mcp` comme connecteur personnalisé dans les réglages de claude.ai — l'enregistrement du client (RFC 7591) et la découverte des métadonnées sont automatiques, vous serez redirigé vers le formulaire de connexion INPI.
+
+**Note sur la sécurité du flux OAuth** : ce déploiement n'utilise aucune base de données. Chaque code d'autorisation / access token / refresh token est un blob chiffré (AES-256-GCM) qui porte directement les identifiants INPI — il n'y a rien à stocker côté serveur. Conséquence : il n'existe pas de révocation individuelle d'un token ; seule la rotation de `OAUTH_TOKEN_SECRET` invalide tous les tokens en circulation, pour tous les utilisateurs à la fois.
+
 ## Variables d'environnement
 
-Pour les transports stdio, Docker et HTTP expérimental (`mcp-inpi-pi-http`) — pas pour le déploiement Vercel, qui utilise des en-têtes HTTP par requête (voir ci-dessus) :
+Pour les transports stdio, Docker et HTTP expérimental (`mcp-inpi-pi-http`) :
 
 | Variable | Requis | Description |
 |---|---|---|
@@ -116,6 +127,12 @@ Pour les transports stdio, Docker et HTTP expérimental (`mcp-inpi-pi-http`) —
 | `INPI_MAX_REQUESTS_PER_MINUTE` | Non | Limite de requêtes/min (défaut : 30) |
 | `INPI_MAX_REQUESTS_PER_HOUR` | Non | Limite de requêtes/h (défaut : 500) |
 | `PORT` | Non | Port HTTP pour le transport expérimental (défaut : 3000) |
+
+Pour le déploiement Vercel uniquement :
+
+| Variable | Requis | Description |
+|---|---|---|
+| `OAUTH_TOKEN_SECRET` | Oui | Secret servant à chiffrer les tokens OAuth (ex : `openssl rand -hex 32`). Sa rotation invalide tous les tokens émis. |
 
 ## Exemples d'utilisation
 

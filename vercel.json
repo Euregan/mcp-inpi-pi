@@ -4,5 +4,12 @@
     "api/mcp.ts": {
       "maxDuration": 60
     }
-  }
+  },
+  "rewrites": [
+    { "source": "/.well-known/oauth-authorization-server", "destination": "/api/oauth-metadata" },
+    { "source": "/.well-known/oauth-protected-resource", "destination": "/api/oauth-protected-resource" },
+    { "source": "/register", "destination": "/api/oauth-register" },
+    { "source": "/authorize", "destination": "/api/oauth-authorize" },
+    { "source": "/token", "destination": "/api/oauth-token" }
+  ]
 }
