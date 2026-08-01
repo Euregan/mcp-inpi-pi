@@ -79,19 +79,35 @@ Le serveur peut aussi être déployé comme [Vercel Function](https://vercel.com
 npx vercel deploy
 ```
 
-Configurez `INPI_USERNAME` et `INPI_PASSWORD` dans les variables d'environnement du projet Vercel. Endpoint exposé : `https://<votre-projet>.vercel.app/api/mcp`.
+Ce déploiement est **multi-utilisateurs** : il n'y a pas de compte INPI global configuré côté serveur. Chaque utilisateur fournit ses propres identifiants via les en-têtes HTTP `X-INPI-Username` / `X-INPI-Password`, envoyés avec chaque requête. Une requête sans ces en-têtes reçoit une erreur 401.
+
+Endpoint exposé : `https://<votre-projet>.vercel.app/api/mcp`.
 
 ```json
 {
   "mcpServers": {
     "inpi-pi": {
-      "url": "https://<votre-projet>.vercel.app/api/mcp"
+      "url": "https://<votre-projet>.vercel.app/api/mcp",
+      "headers": {
+        "X-INPI-Username": "votre-email@exemple.fr",
+        "X-INPI-Password": "votre-mot-de-passe-API"
+      }
     }
   }
 }
 ```
 
+Avec Claude Code :
+
+```bash
+claude mcp add --transport http inpi-pi https://<votre-projet>.vercel.app/api/mcp \
+  --header "X-INPI-Username: votre-email@exemple.fr" \
+  --header "X-INPI-Password: votre-mot-de-passe-API"
+```
+
 ## Variables d'environnement
+
+Pour les transports stdio, Docker et HTTP expérimental (`mcp-inpi-pi-http`) — pas pour le déploiement Vercel, qui utilise des en-têtes HTTP par requête (voir ci-dessus) :
 
 | Variable | Requis | Description |
 |---|---|---|

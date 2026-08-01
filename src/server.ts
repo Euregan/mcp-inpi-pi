@@ -5,6 +5,8 @@
  */
 
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import type { RequestHandlerExtra } from "@modelcontextprotocol/sdk/shared/protocol.js";
+import type { ServerNotification, ServerRequest } from "@modelcontextprotocol/sdk/types.js";
 import { z } from "zod";
 import { INPIClient } from "./api/client.js";
 import { credentialsFromEnv } from "./api/auth.js";
@@ -12,7 +14,12 @@ import { handleSearchTool } from "./tools/search.js";
 import { handleDetailsTool } from "./tools/details.js";
 import { formatNiceClasses } from "./resources/nice-classes.js";
 
-export function registerCapabilities(server: McpServer, resolvedClient: INPIClient): void {
+type ToolExtra = RequestHandlerExtra<ServerRequest, ServerNotification>;
+
+/** Résout le client INPI à utiliser pour un appel de tool donné (fixe en stdio, par en-têtes en HTTP). */
+export type ClientProvider = (extra: ToolExtra) => INPIClient;
+
+export function registerCapabilities(server: McpServer, getClient: ClientProvider): void {
   server.tool(
     "search_trademarks",
     "Recherche de marques dans la base INPI (FR, EU, internationales). Retourne les marques correspondant au terme recherché.",
@@ -24,7 +31,7 @@ export function registerCapabilities(server: McpServer, resolvedClient: INPIClie
       holder: z.string().optional().describe("Filtrer par nom du déposant/titulaire"),
       limit: z.number().int().min(1).max(200).optional().describe("Nombre max de résultats (défaut 20, max 200)"),
     },
-    async (params) => handleSearchTool(params, resolvedClient)
+    async (params, extra) => handleSearchTool(params, getClient(extra))
   );
 
   server.tool(
@@ -33,7 +40,7 @@ export function registerCapabilities(server: McpServer, resolvedClient: INPIClie
     {
       trademark_number: z.string().describe("Numéro de marque (ex: FR4216963, EU018456789, WO1234567)"),
     },
-    async (params) => handleDetailsTool(params, resolvedClient)
+    async (params, extra) => handleDetailsTool(params, getClient(extra))
   );
 
   // --- Resources ---
@@ -63,7 +70,8 @@ export function createServer(client?: INPIClient): McpServer {
     version: "0.1.0",
   });
 
-  registerCapabilities(server, client ?? new INPIClient(credentialsFromEnv()));
+  const resolvedClient = client ?? new INPIClient(credentialsFromEnv());
+  registerCapabilities(server, () => resolvedClient);
 
   return server;
 }

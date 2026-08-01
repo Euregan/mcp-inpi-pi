@@ -8,6 +8,7 @@
  * 3. Requêtes avec Authorization: Bearer + X-XSRF-TOKEN
  */
 
+import type { AuthInfo } from "@modelcontextprotocol/sdk/server/auth/types.js";
 import type { INPICredentials, INPISession } from "./types.js";
 import { INPIAuthError } from "./types.js";
 
@@ -157,6 +158,24 @@ export function credentialsFromEnv(): INPICredentials {
   if (!username || !password) {
     throw new INPIAuthError(
       "Variables d'environnement INPI_USERNAME et INPI_PASSWORD requises"
+    );
+  }
+
+  return { username, password };
+}
+
+/**
+ * Credentials depuis les en-têtes X-INPI-Username / X-INPI-Password d'une requête HTTP.
+ * Utilisé par le transport Vercel (multi-utilisateurs) — voir api/mcp.ts.
+ * Lève une INPIAuthError si l'un des deux en-têtes est absent.
+ */
+export function credentialsFromAuthInfo(authInfo: AuthInfo | undefined): INPICredentials {
+  const username = authInfo?.extra?.username;
+  const password = authInfo?.extra?.password;
+
+  if (typeof username !== "string" || typeof password !== "string" || !username || !password) {
+    throw new INPIAuthError(
+      "En-têtes X-INPI-Username et X-INPI-Password requis"
     );
   }
 
