@@ -8,7 +8,7 @@
  */
 
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import { createServer } from "./server.js";
+import { createServer } from "./mcp-server.js";
 
 async function main(): Promise<void> {
   const username = process.env.INPI_USERNAME;
@@ -28,7 +28,9 @@ async function main(): Promise<void> {
   await server.connect(transport);
 }
 
-main().catch((err) => {
-  console.error("Erreur fatale :", err);
-  process.exit(1);
-});
+if (import.meta.url === `file://${process.argv[1]}`) {
+  main().catch((err) => {
+    console.error("Erreur fatale :", err);
+    process.exit(1);
+  });
+}

@@ -3,14 +3,14 @@
   "version": "0.1.1",
   "description": "Serveur MCP exposant l'API Propriété industrielle de l'INPI",
   "type": "module",
-  "main": "dist/index.js",
+  "main": "dist/index-stdio.js",
   "bin": {
-    "mcp-inpi-pi": "dist/index.js",
+    "mcp-inpi-pi": "dist/index-stdio.js",
     "mcp-inpi-pi-http": "dist/index-http.js"
   },
   "scripts": {
-    "build": "tsup src/index.ts src/index-http.ts --format esm --dts --clean",
-    "dev": "tsx src/index.ts",
+    "build": "tsup src/index-stdio.ts src/index-http.ts --format esm --dts --clean",
+    "dev": "tsx src/index-stdio.ts",
     "test": "vitest run",
     "test:watch": "vitest",
     "lint": "eslint src/ api/",

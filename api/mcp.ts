@@ -9,7 +9,7 @@
 
 import { createMcpHandler, withMcpAuth } from "mcp-handler";
 import type { AuthInfo } from "@modelcontextprotocol/sdk/server/auth/types.js";
-import { registerCapabilities } from "../src/server.js";
+import { registerCapabilities } from "../src/mcp-server.js";
 import { INPIClient } from "../src/api/client.js";
 import { credentialsFromAuthInfo } from "../src/api/auth.js";
 import { TTLCache } from "../src/utils/cache.js";
