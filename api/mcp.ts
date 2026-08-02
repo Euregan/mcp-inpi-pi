@@ -15,6 +15,7 @@ import { credentialsFromAuthInfo } from "../src/api/auth.js";
 import { TTLCache } from "../src/utils/cache.js";
 import { readToken } from "../src/oauth/token-crypto.js";
 import type { CredentialTokenPayload } from "../src/oauth/types.js";
+import { methodRouter } from "../src/utils/http.js";
 
 const CLIENT_TTL_MS = 30 * 60 * 1_000;
 const clientCache = new TTLCache<INPIClient>(CLIENT_TTL_MS);
@@ -70,4 +71,4 @@ const handler = createMcpHandler(
 
 const authedHandler = withMcpAuth(handler, verifyCredentials, { required: true });
 
-export { authedHandler as GET, authedHandler as POST, authedHandler as DELETE };
+export default methodRouter({ GET: authedHandler, POST: authedHandler, DELETE: authedHandler });

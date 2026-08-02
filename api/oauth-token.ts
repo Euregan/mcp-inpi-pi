@@ -12,8 +12,9 @@ import {
 import { exchangeAuthorizationCode, exchangeRefreshToken } from "../src/oauth/token.js";
 import { jsonResponse, oauthErrorResponse, OAUTH_CORS_HEADERS } from "../src/oauth/http.js";
 import { INPIAuthError } from "../src/api/types.js";
+import { methodRouter } from "../src/utils/http.js";
 
-export async function POST(req: Request): Promise<Response> {
+async function POST(req: Request): Promise<Response> {
   const form = new URLSearchParams(await req.text());
   const grantType = form.get("grant_type");
 
@@ -48,6 +49,8 @@ export async function POST(req: Request): Promise<Response> {
   }
 }
 
-export function OPTIONS(): Response {
+function OPTIONS(): Response {
   return new Response(null, { status: 204, headers: OAUTH_CORS_HEADERS });
 }
+
+export default methodRouter({ POST, OPTIONS });

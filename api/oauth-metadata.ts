@@ -5,8 +5,9 @@
 
 import { getPublicOrigin } from "mcp-handler";
 import { jsonResponse, OAUTH_CORS_HEADERS } from "../src/oauth/http.js";
+import { methodRouter } from "../src/utils/http.js";
 
-export function GET(req: Request): Response {
+function GET(req: Request): Response {
   const origin = getPublicOrigin(req);
 
   return jsonResponse({
@@ -21,6 +22,8 @@ export function GET(req: Request): Response {
   });
 }
 
-export function OPTIONS(): Response {
+function OPTIONS(): Response {
   return new Response(null, { status: 204, headers: OAUTH_CORS_HEADERS });
 }
+
+export default methodRouter({ GET, OPTIONS });

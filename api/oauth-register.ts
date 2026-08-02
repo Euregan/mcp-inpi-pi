@@ -7,6 +7,7 @@ import { InvalidClientMetadataError } from "@modelcontextprotocol/sdk/server/aut
 import { registerClient } from "../src/oauth/register.js";
 import { jsonResponse, oauthErrorResponse, OAUTH_CORS_HEADERS } from "../src/oauth/http.js";
 import { INPIAuthError } from "../src/api/types.js";
+import { methodRouter } from "../src/utils/http.js";
 
 async function handleRegister(req: Request): Promise<Response> {
   let body: unknown;
@@ -29,4 +30,4 @@ function handleOptions(): Response {
   return new Response(null, { status: 204, headers: OAUTH_CORS_HEADERS });
 }
 
-export { handleRegister as POST, handleOptions as OPTIONS };
+export default methodRouter({ POST: handleRegister, OPTIONS: handleOptions });

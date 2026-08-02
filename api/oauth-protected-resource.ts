@@ -4,8 +4,9 @@
  */
 
 import { protectedResourceHandler, metadataCorsOptionsRequestHandler, getPublicOrigin } from "mcp-handler";
+import { methodRouter } from "../src/utils/http.js";
 
-export function GET(req: Request): Response {
+function GET(req: Request): Response {
   const origin = getPublicOrigin(req);
   return protectedResourceHandler({
     authServerUrls: [origin],
@@ -13,4 +14,6 @@ export function GET(req: Request): Response {
   })(req);
 }
 
-export const OPTIONS = metadataCorsOptionsRequestHandler();
+const OPTIONS = metadataCorsOptionsRequestHandler();
+
+export default methodRouter({ GET, OPTIONS });

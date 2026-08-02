@@ -6,6 +6,7 @@
 import { parseAuthorizeRequest, issueAuthorizationCode } from "../src/oauth/authorize.js";
 import { renderLoginForm } from "../src/oauth/login-form.js";
 import { INPIAuthError } from "../src/api/types.js";
+import { methodRouter } from "../src/utils/http.js";
 
 function htmlResponse(html: string, status = 200): Response {
   return new Response(html, { status, headers: { "Content-Type": "text/html; charset=utf-8" } });
@@ -16,7 +17,7 @@ function errorPage(err: unknown): Response {
   return htmlResponse(`<p>Erreur : ${message}</p>`, 400);
 }
 
-export async function GET(req: Request): Promise<Response> {
+async function GET(req: Request): Promise<Response> {
   const url = new URL(req.url);
   try {
     const request = parseAuthorizeRequest(url.searchParams);
@@ -26,7 +27,7 @@ export async function GET(req: Request): Promise<Response> {
   }
 }
 
-export async function POST(req: Request): Promise<Response> {
+async function POST(req: Request): Promise<Response> {
   const form = new URLSearchParams(await req.text());
   const username = form.get("username") ?? "";
   const password = form.get("password") ?? "";
@@ -64,3 +65,5 @@ export async function POST(req: Request): Promise<Response> {
     return htmlResponse(renderLoginForm({ ...request, error: message }));
   }
 }
+
+export default methodRouter({ GET, POST });
